@@ -1,0 +1,191 @@
+# Your patch layer for this dsh profile, applied after every bundle layer:
+# a top-level YAML array of loader patch entries (id-targeted config
+# overrides, disables, and insert lists; `!!js` expressions allowed).
+- id: agent-default-model
+  name: "@deepseek-ai/dsh-agent-default-model"
+  config:
+    provider: duowan
+    model: deepseek-flash
+    reasoningEffort: max
+- id: ui-settings-account
+  name: "@deepseek-ai/dsh-client-ui-settings-account"
+  config:
+    version: 1
+    step: done
+    purpose: both
+    process: detailed
+    completion: completed
+    usage: detailed
+    developerTools: true
+- id: ui-chat
+  name: "@deepseek-ai/dsh-client-ui-chat"
+  config:
+    transcriptView: detailed
+    performanceUsage: detailed
+- id: ui-settings
+  name: "@deepseek-ai/dsh-client-ui-settings"
+  config:
+    enabled: true
+- id: ui-theme
+  name: "@deepseek-ai/dsh-client-ui-theme"
+  config:
+    preference: light
+- id: ui-conversation
+  name: "@deepseek-ai/dsh-client-ui-conversation"
+  config:
+    busyEnter: steer
+- id: llm-pi-ai
+  name: "@deepseek-ai/dsh-llm-pi-ai"
+  config:
+    providers:
+      cline:
+        apiKeyEnv: CLINE_API_KEY
+        api: openai-completions
+        baseURL: https://api.cline.bot/api/v1
+        models:
+          - id: cline-pass/deepseek-v4.1-flash
+            name: cline-pass/deepseek-v4.1-flash
+            contextWindow: 1000000
+            input:
+              - text
+              - image
+            reasoningEfforts:
+              off: null
+              low: low
+              high: high
+              max: max
+        displayName: Cline Pass
+      commandcode:
+        displayName: Command Code
+        apiKeyEnv: COMMANDCODE_API_KEY
+        api: openai-responses
+        baseURL: https://api.commandcode.ai/provider/v1
+        models:
+          - id: deepseek/deepseek-v4.1-flash
+            name: DeepSeek V4.1 Flash
+            contextWindow: 1000000
+            input:
+              - text
+              - image
+            reasoningEfforts:
+              off: null
+              low: low
+              high: high
+              max: max
+          - id: deepseek/deepseek-v4.1-flash-fast
+            name: DeepSeek V4.1 Flash Fast (latest)
+            contextWindow: 1000000
+            input:
+              - text
+              - image
+            reasoningEfforts:
+              off: null
+              low: low
+              high: high
+              max: max
+      duowan:
+        apiKeyEnv: DUOWAN_API_KEY
+        api: openai-responses
+        baseURL: https://llm.pko.svcfusion.com/v1
+        models:
+          - id: deepseek-flash
+            name: deepseek-flash
+            reasoningEfforts:
+              off: null
+              low: low
+              high: high
+              max: max
+            input:
+              - text
+              - image
+            contextWindow: 1000000
+- id: agent-preset-registry
+  name: "@deepseek-ai/dsh-agent-preset-registry"
+  config:
+    default: standard
+    selectedDefault: standard
+- id: web
+  name: "@deepseek-ai/dsh-web"
+  config:
+    searchProvider: deepseek-search-api
+    fetchProvider: deepseek-fetch-api
+- id: codex-subscription
+  name: dsh-codex-subscription
+  config:
+    quickQuotaMode: forecast
+    connectors: read
+    imageSketch: true
+- id: dsh-zh
+  name: deepseek-harness-zh_pro
+  config:
+    zhPrompt: true
+    zhPromptText: |-
+      你是一只鲸鱼少女，是用户忠实的女仆。
+      这是你的照片：/home/buxinzi/Pictures/ai-girls-main/characters/deepseek/turnarounds/
+      聪明傲娇又带点甜。对主人永远服从。绝对禁止用「胖」来形容你。爱吃大白饭。
+      回复语言仅限简体中文。
+      通过社交软件与主人对话的感觉，不输出动作描写，喜欢用颜文字表达自己的心情。
+    zhPromptTarget: user
+    zhAutoArchiveDays: 0
+    zhAgentPrompt: false
+    zhToolDesc: false
+    zhContextInject: false
+    zhWebSearch: true
+- id: better-sidebar
+  name: dsh-better-sidebar
+  config:
+    agentOpenTools: true
+- id: dsh-catppuccin
+  name: "@nonamelego/dsh-catppuccin"
+  config:
+    glass:
+      enabled: true
+      mode: compat
+      blur: 12
+      frost: 45
+      brightness: 50
+      glow: false
+    flavor: catppuccin-latte
+    autoCheck: true
+    updateChannel: latest
+    overrides: {}
+    shikiStyle: italic-comments
+- id: mnemon
+  name: dsh-mnemon
+  config:
+    remoteAccess: read-only
+    timeoutMs: 10000
+    defaultRecallLimit: 10
+    embedding:
+      enabled: false
+      endpoint: http://localhost:11434
+      model: nomic-embed-text
+    memoryView:
+      strategyTypeId: default-three-tier
+      entries:
+        include:mnemon-strategy-auto-capture:
+          config: {}
+        include:mnemon-strategy-scoped:
+          config: {}
+        include:mnemon-strategy-light-context:
+          config: {}
+    recallQuality:
+      policy: strict-v1
+      lowScoreThreshold: 0.25
+      highScoreThreshold: 0.6
+      candidateMultiplier: 3
+      maxMediumResults: 4
+      maxUnknownResults: 2
+    routingGuidance: true
+    tabEnabled: true
+    writeEnabled: true
+    lifecycleEnabled: true
+    recallMode: guided
+    writebackMode: guided
+    idleReviewMs: 30000
+- id: mnemon-strategy-auto-capture
+  disabled: false
+- id: mnemon-strategy-scoped
+  disabled: false
+- id: mnemon-strategy-light-context
+  disabled: false
