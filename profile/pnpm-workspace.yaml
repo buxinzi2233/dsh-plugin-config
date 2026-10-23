@@ -5,7 +5,7 @@ nodeLinker: hoisted
 autoInstallPeers: false
 minimumReleaseAgeExclude:
   - dshmarket@1.66.41
-  - '@michengai/dsh-skills-manager@1.2.6'
+  - '@michengai/dsh-skills-manager@1.2.6 || 1.2.11'
   - '@michengai/dsh-archive-manager@1.1.2 || 1.1.3'
   - dsh-context@0.73.2 || 0.73.3
   - '@michengai/dsh-automation@1.0.1 || 1.0.2'
@@ -15,7 +15,7 @@ minimumReleaseAgeExclude:
   - billion-context@0.1.201
   - dsh-codex-subscription@3.1.1
   - deepseek-harness-zh_pro@0.10.3
-  - '@nonamelego/dsh-catppuccin@0.6.3'
+  - '@nonamelego/dsh-catppuccin@0.6.3 || 0.6.4'
   - dsh-browser-cdp@1.2.2
   - '@huanlin/dsh-plugin-mcp-manager@0.5.0'
 allowBuilds:

@@ -1,37 +1,36 @@
 # 已知问题
 
-## 1. web_search 不可用
+## 1. 会话存储已切到 SQLite
 
-- 现象：调用 web_search 报 configured web provider "dsh-zh-web" is not registered。
-- 原因：profile/cordis.patch.yml 里 id: web 配置了 searchProvider: dsh-zh-web，但提供该 provider 的 deepseek-harness-zh_pro 处于停用状态。
-- 修复（二选一）：
-  1. 启用 deepseek-harness-zh_pro bundle；或
-  2. 把 web.searchProvider 改成 deepseek-official，让已启用的 dsh-free-search 接管（插件只在出厂默认值上接管）。
+- 现象：~/.dsh/sessions 下出现 sessions.sqlite（含 -wal/-shm），旧 JSONL 会话不再出现在会话列表。
+- 原因：@morlay/better-session 已启用，它的 patch 禁用 session-persistence-jsonl / session-query-sqlite / session-projection-cache / storage-json，把持久化交给 @morlay/session-rdb。
+- 数据没有丢：旧 JSONL 文件仍在 ~/.dsh/sessions 下（另有 sessions.bak-* 备份目录）。
+- 回退：从 dsh.profile.bundles 移除 @morlay/better-session 并重启；会话列表回到 JSONL 那一套，SQLite 文件保留。
 
-## 2. better-sidebar-plugin-audio 未激活
+## 2. better-sidebar-plugin-audio 可能 pending
 
-- 启动日志：pending (waiting for service: webRuntime)。
-- 原因：该插件 inject 了 webRuntime，当前 DSH 0.2.1-rc.2 没有这个服务。
+- 启动日志若出现 pending (waiting for service: webRuntime)，说明该服务在 0.2.1-rc.2 仍不存在。
 - 影响：音频预览不出现，其余侧栏功能不受影响。
 
-## 3. @morlay 消息操作 pending
+## 3. web_search 的 provider（已解决，留档）
 
-- 启动日志：mkt-client--morlay-ui-conversation-message-actions ... pending (waiting for service: sessionBranch)。
-- 原因：sessionBranch 由 @morlay/better-session bundle 提供，而该 bundle 故意未启用。
+- 旧配置 searchProvider 指向 dsh-zh-web，而提供它的 deepseek-harness-zh_pro 已卸载，会报 configured web provider not registered。
+- 现在 patch 里 web.searchProvider=ddg、fetchProvider=fs-quality-fetch，由 dsh-free-search 接管；zh_pro 已从依赖中移除。
 
-## 4. @morlay/better-session 故意停用
+## 4. 个人模型端点
 
-- 它的 patch 会禁用 session-persistence-jsonl / session-query-sqlite / session-projection-cache / storage-json，把会话存储切到 ~/.dsh/sessions/sessions.sqlite。
-- 现有 JSONL 会话不会迁移，切换后列表会变空（文件仍在磁盘）。
-- 启用前先备份 ~/.dsh/sessions；把 @morlay/better-session 追加到 dsh.profile.bundles 再重启。
+- profile/cordis.patch.yml 里 llm-pi-ai 配了三个供应商：cline（api.cline.bot）、commandcode（api.commandcode.ai）、jiangfan（第三方中转 sub.mathhomework.top）。
+- 只写 apiKeyEnv 环境变量名，真正的 key 在 ~/.dsh/.credentials.yaml；本仓库不含密钥。换机器时端点与模型列表都要自己改。
 
-## 5. 悬空覆盖
+## 5. 版本浮动的依赖
 
-cordis.patch.yml 里有 7 条覆盖指向未启用的行：codex-subscription、dsh-zh、dsh-catppuccin、mnemon、mnemon-strategy-auto-capture、mnemon-strategy-scoped、mnemon-strategy-light-context。启动时会打印 entry ... not found，无功能影响。
+- dsh-image-generation 声明 ^0.1.3，dsh-oil-ui 与 dsh-soulmojito 走 github: 源（后者带 commit sha）。
+- lockfile 固定了当前版本，但 restore 后手工 pnpm update 可能拉到新提交；追求完全复现时保留 pnpm-lock.yaml 不动。
 
 ## 6. 磁盘
 
-根分区约 4.7 GB 可用（99% 已用）。node_modules 约 1.1 GB；语音模型 int8 约 241 MB（fp32 另需 938 MB，不建议）。
+- 根分区约 42 GB 可用（92% 已用）。profile 的 node_modules 约 1.0 GB。
+- 语音输入模型：int8 约 241 MB，fp32 另需 938 MB，不建议。
 
 ## 7. 安装方式
 

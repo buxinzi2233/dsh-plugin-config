@@ -4,10 +4,10 @@
 
 | 插件 | 原因 | 现状 |
 | --- | --- | --- |
-| @huanlin/dsh-plugin-account-signin | 逆向官方实现，不便公开 | 未安装；Windows 侧路径 D:/Projects/deepseek-harness/dsh-plugin-account-signin |
-| @huanlin/dsh-plugin-annotations | 尚未写完 | 未安装；D:/Projects/deepseek-harness/dsh-plugin-annotations |
-| @huanlin/dsh-plugin-deepseek-voice-input | 原计划用 whale-typeless.exe 替代，现改用官方语音输入 | 未安装；D:/Projects/deepseek-harness/dsh-plugin-deepseek-voice-input |
-| @huanlin/dsh-plugin-export-session | 企业版专用 | 未安装；D:/Projects/deepseek-harness/dsh-plugin-export-session |
+| @huanlin/dsh-plugin-account-signin | 逆向官方实现，不便公开 | 未安装 |
+| @huanlin/dsh-plugin-annotations | 尚未写完 | 未安装 |
+| @huanlin/dsh-plugin-deepseek-voice-input | 原计划用 whale-typeless.exe 替代，现改用官方语音输入 | 未安装 |
+| @huanlin/dsh-plugin-export-session | 企业版专用 | 未安装 |
 
 whale-typeless.exe 是 Windows PE，依赖 Win32 全局热键 / explorer 剪贴板 / 原生 overlay，在 Wayland 下不可用；已改用官方 dsh-experimental-voice-input-bundle（本地 SenseVoice）。
 

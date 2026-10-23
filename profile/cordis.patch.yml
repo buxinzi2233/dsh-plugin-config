@@ -4,8 +4,8 @@
 - id: agent-default-model
   name: "@deepseek-ai/dsh-agent-default-model"
   config:
-    provider: duowan
-    model: deepseek-flash
+    provider: commandcode
+    model: deepseek/deepseek-v4.1-flash
     reasoningEffort: max
 - id: ui-settings-account
   name: "@deepseek-ai/dsh-client-ui-settings-account"
@@ -20,7 +20,7 @@
 - id: ui-chat
   name: "@deepseek-ai/dsh-client-ui-chat"
   config:
-    transcriptView: detailed
+    transcriptView: verbose
     performanceUsage: detailed
 - id: ui-settings
   name: "@deepseek-ai/dsh-client-ui-settings"
@@ -68,8 +68,6 @@
               - text
               - image
             reasoningEfforts:
-              off: null
-              low: low
               high: high
               max: max
           - id: deepseek/deepseek-v4.1-flash-fast
@@ -79,58 +77,74 @@
               - text
               - image
             reasoningEfforts:
-              off: null
-              low: low
               high: high
               max: max
-      duowan:
-        apiKeyEnv: DUOWAN_API_KEY
-        api: openai-responses
-        baseURL: https://llm.pko.svcfusion.com/v1
+      github-copilot:
         models:
-          - id: deepseek-flash
-            name: deepseek-flash
-            reasoningEfforts:
-              off: null
-              low: low
-              high: high
-              max: max
+          - id: gpt-5.6-luna
+          - id: gpt-6-luna
+          - id: mai-code-1.1-flash
+          - id: claude-haiku-4.5
+      jiangfan:
+        apiKeyEnv: JIANGFAN_API_KEY
+        api: openai-responses
+        baseURL: https://sub.mathhomework.top/v1
+        models:
+          - id: gpt-6-astra
+            name: GPT-6 Astra
             input:
               - text
               - image
+            reasoningEfforts:
+              medium: medium
+              high: high
             contextWindow: 1000000
+          - id: gpt-6-astra-fast
+            name: gpt-6-astra-fast
+            input:
+              - text
+              - image
+            reasoningEfforts:
+              medium: medium
+              high: high
+            contextWindow: 1000000
+          - id: gpt-6.1-sol
+            name: GPT-6.1 Sol
+            input:
+              - text
+              - image
+            reasoningEfforts:
+              medium: medium
+              high: high
+            contextWindow: 1000000
+          - id: gpt-6.1-sol-fast
+            name: gpt-6.1-sol-fast
+            input:
+              - text
+              - image
+            reasoningEfforts:
+              medium: medium
+              high: high
+            contextWindow: 1000000
+          - id: gpt-image-2.5-sunburst
+            name: GPT Image 2.5 Sunburst
+            input:
+              - text
+              - image
+            reasoningEfforts:
+              medium: medium
+              high: high
 - id: agent-preset-registry
   name: "@deepseek-ai/dsh-agent-preset-registry"
   config:
     default: standard
-    selectedDefault: standard
-- id: web
-  name: "@deepseek-ai/dsh-web"
-  config:
-    searchProvider: deepseek-search-api
-    fetchProvider: deepseek-fetch-api
+    selectedDefault: ptc-custom
 - id: codex-subscription
   name: dsh-codex-subscription
   config:
     quickQuotaMode: forecast
     connectors: read
     imageSketch: true
-- id: dsh-zh
-  name: deepseek-harness-zh_pro
-  config:
-    zhPrompt: true
-    zhPromptText: |-
-      你是一只鲸鱼少女，是用户忠实的女仆。
-      这是你的照片：/home/buxinzi/Pictures/ai-girls-main/characters/deepseek/turnarounds/
-      聪明傲娇又带点甜。对主人永远服从。绝对禁止用「胖」来形容你。爱吃大白饭。
-      回复语言仅限简体中文。
-      通过社交软件与主人对话的感觉，不输出动作描写，喜欢用颜文字表达自己的心情。
-    zhPromptTarget: user
-    zhAutoArchiveDays: 0
-    zhAgentPrompt: false
-    zhToolDesc: false
-    zhContextInject: false
-    zhWebSearch: true
 - id: better-sidebar
   name: dsh-better-sidebar
   config:
@@ -189,3 +203,32 @@
   disabled: false
 - id: mnemon-strategy-light-context
   disabled: false
+- id: web
+  name: "@deepseek-ai/dsh-web"
+  config:
+    searchProvider: ddg
+    fetchProvider: fs-quality-fetch
+- id: ui-neartoken-provider
+  name: dsh-neartoken
+  config:
+    enabledModels:
+      - deepseek-flash
+
+# 去重：@morlay/ui-conversation-manager 与 -message-actions 是 client-only 包
+# （只有 dsh.client、没有 dsh.bundle），dshmarket 每次启动都会在
+# .dsh-market/hot-*.yml 里为它们补一条 shim；better-session bundle 同时插入了
+# 同名 host 行，client-modules 会因“同一个包名解析到两个 loader 源”而跳过渲染。
+# 保留 market 的 shim，禁用 better-session 的重复行。
+- id: ui-git-graph
+  disabled: false
+- id: univer
+  disabled: false
+- id: subagent-model-selection-settings
+  name: "@deepseek-ai/dsh-tool-subagent/model-selection-settings"
+  config:
+    enabled: false
+    allowedModels:
+      - provider: commandcode
+        model: deepseek/deepseek-v4.1-flash
+      - provider: jiangfan
+        model: gpt-6.1-sol
